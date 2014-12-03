@@ -18,12 +18,10 @@ import javax.swing.border.SoftBevelBorder;
 import javax.swing.AbstractListModel;
 
 import twitter.User;
+import javax.swing.JLabel;
 
 public class UserView extends JFrame {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JTextField txtUserId;
@@ -36,7 +34,8 @@ public class UserView extends JFrame {
 	private JList newsFeed;
 	private DefaultListModel listModel = new DefaultListModel();
 	private DefaultListModel listModel2 = new DefaultListModel();
-	User user = new User(null);
+	private User user = new User();
+	private JLabel lbLastUpdateTime;
 	
 
 	/**
@@ -115,6 +114,10 @@ public class UserView extends JFrame {
 		contentPane.add(panel_1);
 		panel_1.setLayout(null);
 		
+		final JLabel lbLastUpdateTime = new JLabel("Last Update Time");
+		lbLastUpdateTime.setBounds(88, 406, 206, 16);
+		contentPane.add(lbLastUpdateTime);
+		
 		txtTweetMessage = new JTextField();
 		txtTweetMessage.setText("Tweet Message");
 		txtTweetMessage.setBounds(0, 6, 136, 30);
@@ -126,6 +129,10 @@ public class UserView extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				listModel2.addElement(txtTweetMessage.getText());
 				newsFeed = new JList(listModel);
+				user.setLastUpdateTime();
+				String lastUpdateTime = String.valueOf(user.getLastUpdateTime());
+				System.out.println("Created at: " + lastUpdateTime);
+				lbLastUpdateTime.setText("Created at:" + lastUpdateTime);
 			}
 		});
 		btnTweet.setBounds(178, 7, 110, 30);
@@ -133,7 +140,7 @@ public class UserView extends JFrame {
 		
 		panel_2 = new JPanel();
 		panel_2.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, null, null, null, null));
-		panel_2.setBounds(6, 252, 288, 170);
+		panel_2.setBounds(6, 252, 288, 150);
 		contentPane.add(panel_2);
 		panel_2.setLayout(null);
 		
@@ -148,5 +155,9 @@ public class UserView extends JFrame {
 		JScrollBar scrollBar = new JScrollBar();
 		scrollBar.setBounds(279, 50, 15, 136);
 		contentPane.add(scrollBar);
+	}
+	
+	public void resetLastUpdateTime(ActionEvent e, String s) {
+		lbLastUpdateTime.setText(s);
 	}
 }

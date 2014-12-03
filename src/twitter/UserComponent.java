@@ -1,6 +1,7 @@
 package twitter;
 
 public abstract class UserComponent {
+	protected long creationTime;
 	
 	public void add(UserComponent newUserComponent) {
 		
@@ -20,6 +21,14 @@ public abstract class UserComponent {
 	public void displayComponent() {
 		
 		throw new UnsupportedOperationException();
+	}
+	
+	public void setCreationTime() {
+		this.creationTime = System.currentTimeMillis();
+	}
+
+	public void getCreationTime() {
+		System.out.println("Created at: " + creationTime);;
 	}
 	
 }

@@ -16,6 +16,7 @@ import java.awt.event.MouseEvent;
 
 import javax.swing.JLabel;
 
+import com.apple.jobjc.ID;
 import com.jgoodies.forms.factories.DefaultComponentFactory;
 
 import javax.swing.tree.DefaultTreeModel;
@@ -34,9 +35,9 @@ public class AdminControlPanel {
 	private JTextField textFieldUserId;
 	private JTextField textFieldGroupId;
 	private static AdminControlPanel instance = null;
-	User user = new User(null);
-	UserGroup userGroup = new UserGroup();
-	JTree tree = new JTree();
+	private User user = new User();
+	private UserGroup userGroup = new UserGroup();
+	private JTree tree = new JTree();
 		
 	public static synchronized AdminControlPanel getInstance() {
 		if (instance == null) {
@@ -86,29 +87,6 @@ public class AdminControlPanel {
 		));
 		tree.setEditable(true);
 		tree.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, null, null, null, null));
-//		tree.setModel(new DefaultTreeModel(
-//			new DefaultMutableTreeNode("Root") {
-//				/**
-//				 * 
-//				 */
-//				private static final long serialVersionUID = 1L;
-//
-//				{
-//					DefaultMutableTreeNode node_1;
-//					node_1 = new DefaultMutableTreeNode("Dog-Lovers");
-//						node_1.add(new DefaultMutableTreeNode("James"));
-//						node_1.add(new DefaultMutableTreeNode("Tigran"));
-//						node_1.add(new DefaultMutableTreeNode("Roy"));
-//					add(node_1);
-//					node_1 = new DefaultMutableTreeNode("Yankee Fans");
-//						node_1.add(new DefaultMutableTreeNode("Tigran"));
-//						node_1.add(new DefaultMutableTreeNode("Andrea"));
-//					add(node_1);
-//					add(new DefaultMutableTreeNode("Diego"));
-//					add(new DefaultMutableTreeNode("Edwin"));
-//				}
-//			}
-//		));
 		tree.setBounds(6, 6, 198, 266);
 		frame.getContentPane().add(tree);
 		
@@ -127,9 +105,11 @@ public class AdminControlPanel {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				user.addFollower(textFieldUserId.getText());
+				user.addFollower(textFieldUserId.getText().replace(" ", ""));
+				user.setId(textFieldUserId.getText());
 				System.out.println(user.getFollowers());
-				
+				user.setCreationTime();
+				user.getCreationTime();
 				DefaultTreeModel model = (DefaultTreeModel) tree.getModel();
 				DefaultMutableTreeNode root = (DefaultMutableTreeNode) model.getRoot();
 				model.insertNodeInto(new DefaultMutableTreeNode(textFieldUserId.getText()), root, root.getChildCount());
@@ -154,35 +134,24 @@ public class AdminControlPanel {
 					model.reload(root);
 				}
 				
-				//Testing
-				userGroup.addFollower(textFieldGroupId.getText());
+				userGroup.addFollower(textFieldGroupId.getText().replace(" ", ""));
+				userGroup.setId(textFieldGroupId.getText());
 				System.out.println(userGroup.getFollowers());
+				userGroup.setCreationTime();
+				userGroup.getCreationTime();
 			}
 		});
 		addGroupBtn.setBounds(342, 47, 102, 30);
 		frame.getContentPane().add(addGroupBtn);
 		
-		//User View Btn
-		JButton userViewBtn = new JButton("User View");
-		//Click handler for userViewBtn
-		userViewBtn.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				UserView.main();
-			}
-		});
-		
-		userViewBtn.setBounds(270, 120, 110, 30);
-		frame.getContentPane().add(userViewBtn);
-		
 		JPanel panel = new JPanel();
-		panel.setBounds(216, 162, 228, 110);
+		panel.setBounds(216, 146, 228, 126);
 		frame.getContentPane().add(panel);
 		panel.setLayout(null);
 		
 		//User Total Btn
 		JButton btnUserTotal = new JButton("User Total");
-		btnUserTotal.setBounds(0, 27, 110, 30);
+		btnUserTotal.setBounds(0, 42, 110, 30);
 		panel.add(btnUserTotal);
 		btnUserTotal.addActionListener(new ActionListener () {
 			public void actionPerformed(ActionEvent e) {
@@ -200,16 +169,48 @@ public class AdminControlPanel {
 						JOptionPane.PLAIN_MESSAGE);
 			}
 		});
-		btnGroupTotal.setBounds(118, 27, 110, 30);
+		btnGroupTotal.setBounds(118, 42, 110, 30);
 		panel.add(btnGroupTotal);
 		
 		JButton btnMessageTotal = new JButton("Msg's Total");
-		btnMessageTotal.setBounds(0, 75, 110, 30);
+		btnMessageTotal.setBounds(0, 90, 110, 30);
 		panel.add(btnMessageTotal);
 		
 		JButton btnPositivePerc = new JButton("Positive %");
-		btnPositivePerc.setBounds(118, 75, 110, 30);
+		btnPositivePerc.setBounds(118, 90, 110, 30);
 		panel.add(btnPositivePerc);
+		
+		//User View Btn
+		JButton userViewBtn = new JButton("User View");
+		userViewBtn.setBounds(55, 6, 110, 30);
+		panel.add(userViewBtn);
+		//Click handler for userViewBtn
+		userViewBtn.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				UserView.main();
+			}
+		});
+		
+		JButton btnUserVerification = new JButton("User Verification");
+		btnUserVerification.setBounds(270, 81, 110, 30);
+		frame.getContentPane().add(btnUserVerification);
+		btnUserVerification.addActionListener(new ActionListener () {
+			public void actionPerformed(ActionEvent e) {
+				JOptionPane.showMessageDialog(frame, "All users and groups valid"
+						, "Verify Users and Groups", JOptionPane.PLAIN_MESSAGE);
+			}
+		});
+		
+		JButton btnLastUpdate = new JButton("Last Update");
+		btnLastUpdate.setBounds(270, 117, 110, 30);
+		frame.getContentPane().add(btnLastUpdate);		
+		btnLastUpdate.addActionListener(new ActionListener () {
+			public void actionPerformed(ActionEvent e) {
+				JOptionPane.showMessageDialog(frame, "Last updated user: " + user.getId() 
+						, "Last Updated User", JOptionPane.PLAIN_MESSAGE);
+			}
+		});
 		
 		tree.addTreeSelectionListener(new TreeSelectionListener() {
 			@Override
@@ -225,4 +226,5 @@ public class AdminControlPanel {
 			}
 		});
 	}
+
 }

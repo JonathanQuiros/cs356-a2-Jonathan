@@ -85,9 +85,14 @@ public class UserGroup extends UserComponent implements Subject {
 		return followers.size();
 	}
 
-//	@Override
-//	public double accept(Visitor visitor) {
-//
-//		return visitor.visit(this);
-//	}
+	@Override
+	public void verification() {
+		for(Object s : followers) {
+			System.out.println("Verified!");
+		}
+	}
+
+	public void setId(String text) {
+		name = text;
+	}
 }

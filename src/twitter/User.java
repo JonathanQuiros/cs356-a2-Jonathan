@@ -1,6 +1,7 @@
 package twitter;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -10,13 +11,15 @@ import observer.Subject;
 import visitor.*;
 
 public class User extends UserComponent implements Subject {
+	private HashMap<String, Integer> User;
 	private HashSet<Object> followers;
 	private HashSet<String> following;
 	private ArrayList<Observer> tweets;
 	private ArrayList<?> newsFeed;
 	private String userId;
-	
-	public User(String userId) {
+	private long lastUpdateTime;
+
+	public User() {
 		super();
 		this.userId = userId;
 		tweets = new ArrayList<Observer>();
@@ -65,11 +68,6 @@ public class User extends UserComponent implements Subject {
 			
 	}
 
-//	@Override
-//	public double accept(Visitor visitor) {
-//		return visitor.visit(this);
-//	}
-
 	@Override
 	public void register(Observer newObserver) {
 		followers.add(newObserver);
@@ -107,4 +105,26 @@ public class User extends UserComponent implements Subject {
 		this.following = following;
 	}
 	
+	@Override
+	public void verification() {
+		for(Object s : followers) {
+			System.out.println("Verified!");
+		}
+	}
+
+	public HashMap<String, Integer> getUser() {
+		return User;
+	}
+
+	public void setUser(HashMap<String, Integer> user) {
+		User = user;
+	}
+	
+	public long getLastUpdateTime() {
+		return lastUpdateTime;
+	}
+
+	public void setLastUpdateTime() {
+		this.lastUpdateTime = System.currentTimeMillis();
+	}
 }
